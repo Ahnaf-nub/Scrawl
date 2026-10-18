@@ -6,8 +6,6 @@ We all scribble when we zone out in class, in meetings, on desks and in the marg
 
 **Live demo: https://scrawl-plum.vercel.app/**
 
-> Built for Hacktoberfest Hack Day Dhaka.
-
 ## The problem
 
 Everyone has game ideas. They show up as doodles in the margins of notebooks, on desks, on the back of a worksheet. But turning an idea into something you can actually play usually means learning code or a game engine first, so the doodle stays a doodle and ends up in the bin.
