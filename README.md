@@ -10,9 +10,9 @@ We all scribble when we zone out in class, in meetings, on desks and in the marg
 
 ## The problem
 
-Everyone can imagine a game level. Almost nobody can build one. Making even a simple level needs code, a game engine or editor skills, so kids, students, teachers and designers have ideas on paper that never become playable. Meanwhile millions of doodles end up in the bin.
+Everyone has game ideas. They show up as doodles in the margins of notebooks, on desks, on the back of a worksheet. But turning an idea into something you can actually play usually means learning code or a game engine first, so the doodle stays a doodle and ends up in the bin.
 
-Scrawl closes the gap between a paper sketch and a playable level, with no technical skill required.
+Scrawl lets the drawing itself be the game. If you can draw it, you can play it.
 
 ## What it does
 
