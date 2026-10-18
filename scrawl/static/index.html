@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scrawl: draw a level, play it</title>
+  <meta name="description" content="Photograph a platformer level you drew on paper. Gemma 4 reads it and turns it into a playable game.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="topbar">
+      <span class="brand">Scrawl</span>
+      <div class="authbar" id="authbar" hidden>
+        <span id="who"></span>
+        <button class="btn" id="signin" type="button">Sign in</button>
+        <button class="btn" id="myLevels" type="button" hidden>My levels</button>
+        <button class="btn" id="signout" type="button" hidden>Sign out</button>
+      </div>
+    </div>
+    <div class="chips"><span class="chip">1 PLAYER</span><span class="chip pink">POWERED BY GEMMA 4</span></div>
+    <div class="titlerow"><span class="badge" aria-hidden="true">&#9654;</span><h1>Draw a level. Play it.</h1></div>
+    <p>Draw a platformer level on paper, snap a photo, and play it a few seconds later. Gemma 4 reads your drawing.</p>
+  </header>
+
+  <main class="layout">
+    <section class="sketch" aria-labelledby="sketch-h">
+      <h2 id="sketch-h">Your sketch</h2>
+
+      <div class="drop" id="drop">
+        <input id="file" type="file" accept="image/*" hidden>
+        <div class="thumb" id="thumbBox" hidden>
+          <img id="thumb" alt="The photo of your sketch">
+          <svg id="seen" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" hidden></svg>
+        </div>
+        <div class="drop-empty" id="dropEmpty">
+          <svg viewBox="0 0 64 40" width="96" aria-hidden="true">
+            <path d="M3 36 H27 M36 22 H60 M44 8 H61" stroke="#16213a" stroke-width="4" stroke-linecap="round" fill="none"/>
+            <path d="M12 32 l3 -9 l3 9 z" fill="#e5383b" stroke="#16213a" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+          <p>Drop a photo of your drawing here, or choose one.</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <button class="btn primary" id="pick" type="button">Choose a photo</button>
+        <button class="btn blue" id="cam" type="button">Take photo</button>
+        <button class="btn green" id="draw" type="button">Draw on screen</button>
+        <button class="link" id="sample" type="button">Try the sample level</button>
+      </div>
+
+      <label class="check" id="seenLabel" hidden>
+        <input type="checkbox" id="toggleSeen" checked>
+        Show what Gemma saw
+      </label>
+
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="play" aria-labelledby="title">
+      <div class="play-head">
+        <h2 id="title">Sample level</h2>
+        <p class="hud" id="hud"><span id="hudCoins">Coins 0/0</span> <span id="hudDeaths">Deaths 0</span></p>
+      </div>
+
+      <div class="stage">
+        <canvas id="game" tabindex="0" aria-label="Game area. Use arrow keys or A and D to move, Space to jump."></canvas>
+        <div class="win" id="win" hidden>
+          <h3>Level clear</h3>
+          <p id="winText"></p>
+          <div class="row">
+            <button class="btn primary" id="again" type="button">Play again</button>
+            <button class="btn" id="another" type="button">Upload another sketch</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="touch" aria-label="Touch controls">
+        <button type="button" data-key="left" aria-label="Move left">&lsaquo;</button>
+        <button type="button" data-key="right" aria-label="Move right">&rsaquo;</button>
+        <button type="button" data-key="jump" class="jump" aria-label="Jump or up">Jump / Up</button>
+        <button type="button" data-key="down" aria-label="Down">&#9660;</button>
+      </div>
+
+      <p class="hint" id="hint">Arrow keys or A and D to move, Space to jump. Land on a red blob to squash it.</p>
+      <div class="row">
+        <button class="link" id="restart" type="button">Restart level</button>
+        <button class="link" id="save" type="button" disabled>Save level</button>
+        <button class="link" id="share" type="button" disabled>Copy link to this level</button>
+      </div>
+    </section>
+  </main>
+
+  <section class="key" aria-labelledby="key-h">
+    <h2 id="key-h">How to draw your level</h2>
+    <p class="key-note">Use a thick dark marker on plain paper, draw in landscape, and photograph it in good light.</p>
+    <ul>
+      <li>
+        <svg viewBox="0 0 48 32" aria-hidden="true"><rect x="4" y="12" width="40" height="8" rx="2" fill="none" stroke="#16213a" stroke-width="3"/></svg>
+        <span><strong>Platform</strong> Any rectangle or thick line you can stand on.</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 48 32" aria-hidden="true"><path d="M8 28 L16 6 L24 28 M24 28 L32 6 L40 28" fill="none" stroke="#16213a" stroke-width="3" stroke-linejoin="round"/></svg>
+        <span><strong>Spikes</strong> Triangles hurt. You go back to the start.</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 48 32" aria-hidden="true"><circle cx="24" cy="16" r="9" fill="none" stroke="#16213a" stroke-width="3"/></svg>
+        <span><strong>Coin</strong> A small circle. Collect them all.</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 48 32" aria-hidden="true"><path d="M24 3 L28.5 12.5 L39 14 L31.500 21 L33.500 31 L24 26 L14.500 31 L16.500 21 L9 14 L19.500 12.500 Z" fill="none" stroke="#16213a" stroke-width="2.5" stroke-linejoin="round"/></svg>
+        <span><strong>Goal</strong> One star. Reach it to win.</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 48 32" aria-hidden="true"><circle cx="24" cy="16" r="12" fill="none" stroke="#16213a" stroke-width="3"/><circle cx="19.500" cy="13" r="1.800" fill="#16213a"/><circle cx="28.500" cy="13" r="1.800" fill="#16213a"/><path d="M18 20 Q24 26 30 20" fill="none" stroke="#16213a" stroke-width="2.500" stroke-linecap="round"/></svg>
+        <span><strong>You</strong> A smiley face or the letter S marks where you start.</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 48 32" aria-hidden="true"><path d="M12 5 L36 27 M36 5 L12 27" stroke="#16213a" stroke-width="3.500" stroke-linecap="round"/></svg>
+        <span><strong>Enemy</strong> An X or a scribbled blob. It patrols back and forth.</span>
+      </li>
+    </ul>
+    <details class="more">
+      <summary>Drawing a maze or a race track</summary>
+      <ul>
+        <li><span><strong>Maze (top-down)</strong> Thick lines are walls. A smiley or S is the start, a star is the exit, a small key shape is a key (grab them all to unlock the exit), and an X is an enemy.</span></li>
+        <li><span><strong>Race (top-down)</strong> Draw one closed loop for the road and a short line across it for the start. Add an arrow to set the direction, or the car goes clockwise.</span></li>
+      </ul>
+    </details>
+  </section>
+
+  <footer class="foot">
+    <p>Built with Gemma 4 through the Gemini API. Open source under the MIT license.</p>
+  </footer>
+
+  <dialog id="authDlg">
+    <h3>Sign in to save levels</h3>
+    <form id="authForm">
+      <p><input id="email" type="text" placeholder="Username (3-24 letters, numbers, _ . -)" autocomplete="username" required minlength="3" maxlength="24" pattern="[A-Za-z0-9_.\-]+"></p>
+      <p><input id="password" type="password" placeholder="Password (6+ characters)" autocomplete="current-password" required minlength="6"></p>
+      <div class="row">
+        <button class="btn primary" type="submit">Sign in</button>
+        <button class="btn" id="signup" type="button">Create account</button>
+        <button class="btn" type="button" data-close>Cancel</button>
+      </div>
+      <p class="status" id="authMsg"></p>
+    </form>
+  </dialog>
+
+  <dialog id="camDlg">
+    <h3>Take a photo of your drawing</h3>
+    <video id="camVideo" autoplay playsinline muted></video>
+    <div class="row">
+      <button class="btn primary" id="snap" type="button">Capture</button>
+      <button class="btn" type="button" data-close>Close</button>
+    </div>
+  </dialog>
+
+  <dialog id="drawDlg">
+    <h3>Draw your level</h3>
+    <canvas id="pad" width="960" height="540" aria-label="Drawing area"></canvas>
+    <div class="row">
+      <button class="btn primary" id="pen" type="button">Pen</button>
+      <button class="btn" id="eraser" type="button">Eraser</button>
+      <button class="btn" id="clearPad" type="button">Clear</button>
+      <button class="btn primary" id="usePad" type="button">Make my level</button>
+      <button class="btn" type="button" data-close>Close</button>
+    </div>
+  </dialog>
+
+  <dialog id="levelsDlg">
+    <h3>My levels</h3>
+    <ul class="levels-list" id="levelList"></ul>
+    <div class="row"><button class="btn" type="button" data-close>Close</button></div>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="/static/game.js"></script>
+  <script src="/static/modes.js"></script>
+  <script src="/static/app.js"></script>
+  <script src="/static/extras.js"></script>
+</body>
+</html>

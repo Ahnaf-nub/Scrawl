@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Scrawl level",
+  "type": "object",
+  "required": ["player", "goal", "platforms"],
+  "properties": {
+    "title": {"type": "string", "maxLength": 60},
+    "player": {"$ref": "#/$defs/point"},
+    "goal": {"$ref": "#/$defs/point"},
+    "platforms": {"type": "array", "maxItems": 40, "items": {"$ref": "#/$defs/rect"}},
+    "spikes": {"type": "array", "maxItems": 20, "items": {"$ref": "#/$defs/rect"}},
+    "coins": {"type": "array", "maxItems": 30, "items": {"$ref": "#/$defs/point"}},
+    "enemies": {"type": "array", "maxItems": 12, "items": {"$ref": "#/$defs/point"}}
+  },
+  "$defs": {
+    "pct": {"type": "number", "minimum": 0, "maximum": 100},
+    "point": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {"x": {"$ref": "#/$defs/pct"}, "y": {"$ref": "#/$defs/pct"}}
+    },
+    "rect": {
+      "type": "object",
+      "required": ["x", "y", "w", "h"],
+      "properties": {
+        "x": {"$ref": "#/$defs/pct"}, "y": {"$ref": "#/$defs/pct"},
+        "w": {"$ref": "#/$defs/pct"}, "h": {"$ref": "#/$defs/pct"}
+      }
+    }
+  }
+}
