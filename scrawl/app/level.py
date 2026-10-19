@@ -8,11 +8,12 @@ All coordinates are percentages (0-100) of the sketch image.
 from __future__ import annotations
 
 import json
+import os
 import re
 import secrets
 from pathlib import Path
 
-LEVEL_DIR = Path(__file__).resolve().parent.parent / "data" / "levels"
+LEVEL_DIR = Path("/tmp/levels") if os.getenv("VERCEL") else Path(__file__).resolve().parent.parent / "data" / "levels"
 
 MAX_PLATFORMS = 60
 MAX_SPIKES = 20
